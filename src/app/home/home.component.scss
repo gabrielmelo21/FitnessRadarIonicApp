@@ -1,0 +1,16 @@
+#present-alert {
+  border-radius: 20px;
+}
+.pc{
+  width: 60%;
+  margin: auto;
+}
+.trash{
+  cursor: pointer;
+  transition: transform .1s ease-in;
+}
+.trash:hover{
+  transform: scale(1.45);
+  color: red;
+
+}

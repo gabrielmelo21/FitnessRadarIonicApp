@@ -1,0 +1,89 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import '@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+/* Estilizar a barra de rolagem */
+::-webkit-scrollbar {
+  width: 12px; /* Largura da barra de rolagem vertical */
+  height: 12px; /* Altura da barra de rolagem horizontal */
+  /* Estilizar a barra de rolagem para navegadores não baseados em Webkit */
+  scrollbar-width: thin; /* Largura da barra de rolagem (thin, auto ou none) */
+  scrollbar-color: #888 #f1f1f1; /* Cor da barra de rolagem e da trilha */
+}
+
+/* Estilizar o "polegar" da barra de rolagem (a parte que você arrasta) */
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Cor de fundo do polegar */
+  border-radius: 6px; /* Borda arredondada do polegar */
+}
+
+/* Estilizar a trilha da barra de rolagem (a parte cinza) */
+::-webkit-scrollbar-track {
+  background-color: transparent; /* Cor de fundo da trilha */
+}
+
+ .primary{
+  color: #3498db;
+}
+.bold{
+  font-weight: bold;
+}
+ion-alert{
+   border-radius: 20px;
+}
+.center {
+  display: flex;
+  justify-content: center;
+}
+.margin{
+  margin: 10px;
+}
+.padding{
+  padding: 10px;
+}
+.padding20{
+  padding: 20px;
+}
+.textCenter{
+  text-align: center;
+}
+.rgba{
+  background: rgba(0,0,0,.5);
+}
+.borderRadius20{
+  border-radius: 20px
+}
+.scroll{
+  overflow-y: scroll; overflow-x: hidden;
+}
+.mat-divider {
+  height: 1px; /* Altura da linha do divisor */
+  background-color: #ccc; /* Cor do divisor */
+  margin: 16px 0; /* Espaçamento vertical */
+}
+.floatingButton{
+  margin-bottom: 20px;margin-right: 20px
+}

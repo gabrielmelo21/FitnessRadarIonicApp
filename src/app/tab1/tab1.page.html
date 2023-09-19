@@ -1,0 +1,22 @@
+<ion-header [translucent]="true" *ngIf="toolbar" >
+  <ion-toolbar>
+    <ion-title class="textCenter primary">
+      <ion-icon name="restaurant-outline"></ion-icon>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true"  class="animate__animated  animate__zoomIn"  >
+  <app-home></app-home>
+
+  <ion-fab  slot="fixed" vertical="bottom" horizontal="end" class="floatingButton">
+    <ion-fab-button id="open-modal" >
+      <ion-icon name="add" ></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+
+</ion-content>
+
+
+

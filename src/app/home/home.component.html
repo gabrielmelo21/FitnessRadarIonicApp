@@ -1,0 +1,112 @@
+<ion-card [class]="cardClass" style="margin-top: 10px">
+  <ion-card-header>
+    <ion-card-title class="primary"><ion-icon name="restaurant-outline"></ion-icon> Calories Dashboard</ion-card-title>
+    <ion-card-subtitle>Administre a quantidade de Calorias ingeridas e veja o gráfico de calorias perdidas ou ganhas ao longo do tempo.</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-grid >
+      <ion-row>
+        <ion-col [size]="gridSize">
+          <ion-card class="borderRadius20" style="height: 320px">
+            <ion-card-header>
+              <ion-card-title>Calorias Diárias</ion-card-title>
+              <ion-card-subtitle>Você deve consumir Abaixo do Limite diário</ion-card-subtitle>
+              <ion-button fill="outline" size="small" shape="round">Descubra seu T.M.B</ion-button>
+            </ion-card-header>
+            <ion-card-content>
+              <div class="rgba borderRadius20 margin" style="height: 100px">
+                <h1 class="center padding" style="font-size: 30px;padding: 10px; color: white;">0 / 1811</h1>
+                <ion-progress-bar [value]="50" class="margin borderRadius20" style="width: 90%;padding: 5px;margin-top: 10px"></ion-progress-bar>
+                <br>
+              </div>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col>
+          <ion-card class="borderRadius20"  size-md="6" size-sm="12">
+            <ion-card-content>
+              <ion-list style="height: 300px" class="scroll">
+                <ion-list-header>
+                  <ion-label>Histórico de Alimentos Ingeridos</ion-label>
+                </ion-list-header>
+                <ion-item>
+                  <ion-label class="rgba padding borderRadius20 padding20">Banana x1<br><span class="primary bold">123 Kcal</span></ion-label>
+                  <ion-icon class="trash" slot="end" name="trash-bin"></ion-icon>
+                </ion-item>
+                <ion-item>
+                  <ion-label class="rgba padding borderRadius20 padding20">Banana x1<br><span class="primary bold">123 Kcal</span></ion-label>
+                  <ion-icon class="trash" slot="end" name="trash-bin"></ion-icon>
+                </ion-item>
+                <ion-item>
+                  <ion-label class="rgba padding borderRadius20 padding20">Banana x1<br><span class="primary bold">123 Kcal</span></ion-label>
+                  <ion-icon class="trash" slot="end" name="trash-bin"></ion-icon>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div class="mat-divider"></div>
+
+
+    <!-- graficos -->
+
+
+    <ion-grid>
+      <ion-row>
+        <ion-col [size]="gridSize">
+          <ion-card class="borderRadius20" style="height: 290px">
+            <ion-card-header>
+              <ion-card-title>Histórico de Deficit Calorico</ion-card-title>
+              <ion-card-subtitle>Acomapanhe seu desempenho diáriamente</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-list style="height: 300px" class="scroll">
+                <ion-item>
+                  <ion-label class="rgba padding borderRadius20 padding20">-120 Kcal<br><span class="primary bold">21/01</span></ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col>
+          <ion-card class="borderRadius20"  size-md="6" size-sm="12" style="height: 290px">
+            <ion-card-content>
+                     <img src="https://www.pngall.com/wp-content/uploads/10/Line-Chart-Transparent.png" width="80%" height="80%" >
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+  </ion-card-content>
+</ion-card>
+
+
+
+<ion-modal trigger="open-modal"  >
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button >Cancel</ion-button>
+        </ion-buttons>
+        <ion-title>Welcome</ion-title>
+        <ion-buttons slot="end">
+          <ion-button   [strong]="true">Confirm</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-item>
+        <ion-label position="stacked">Enter your name</ion-label>
+        <ion-input type="text" placeholder="Your name"  ></ion-input>
+      </ion-item>
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
