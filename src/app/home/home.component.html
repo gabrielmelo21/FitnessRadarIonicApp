@@ -25,23 +25,28 @@
         </ion-col>
         <ion-col>
           <ion-card class="borderRadius20"  size-md="6" size-sm="12">
+
+
+
             <ion-card-content>
               <ion-list style="height: 300px" class="scroll">
                 <ion-list-header>
                   <ion-label>Histórico de Alimentos Ingeridos</ion-label>
                 </ion-list-header>
-                <ion-item>
-                  <ion-label class="rgba padding borderRadius20 padding20">Banana x1<br><span class="primary bold">123 Kcal</span></ion-label>
-                  <ion-icon class="trash" slot="end" name="trash-bin"></ion-icon>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="rgba padding borderRadius20 padding20">Banana x1<br><span class="primary bold">123 Kcal</span></ion-label>
-                  <ion-icon class="trash" slot="end" name="trash-bin"></ion-icon>
-                </ion-item>
-                <ion-item>
-                  <ion-label class="rgba padding borderRadius20 padding20">Banana x1<br><span class="primary bold">123 Kcal</span></ion-label>
-                  <ion-icon class="trash" slot="end" name="trash-bin"></ion-icon>
-                </ion-item>
+
+                  <div *ngFor="let x of alimentosIngeridos$ | async">
+                    <ion-item class="animate__animated  animate__fadeInRight">
+                      <ion-label class="rgba padding borderRadius20 padding20">{{x.alimento}} x{{x.quantidade}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
+                      <ion-icon (click)="deleteAlimentoIngerido(x.id)" class="trash" slot="end" name="trash-bin"></ion-icon>
+                    </ion-item>
+                  </div>
+                <!--<div *ngIf=" alimentosIngeridos$.length>0;else empty">
+                </div>
+                <ng-template #empty>
+                  <h3>GIF DE PRTO V4SIO</h3>
+                </ng-template>
+-->
+
               </ion-list>
             </ion-card-content>
           </ion-card>
@@ -87,26 +92,126 @@
 
 
 
-<ion-modal trigger="open-modal"  >
+<ion-modal trigger="open-modal" class="borderRadius20"   >
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-button >Cancel</ion-button>
-        </ion-buttons>
-        <ion-title>Welcome</ion-title>
-        <ion-buttons slot="end">
-          <ion-button   [strong]="true">Confirm</ion-button>
-        </ion-buttons>
+
+        <ion-title>Adicione um Alimento</ion-title>
+
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <ion-item>
-        <ion-label position="stacked">Enter your name</ion-label>
-        <ion-input type="text" placeholder="Your name"  ></ion-input>
-      </ion-item>
+<p>Adicionar novos alimentos em nosso banco de dados</p>
+      <ion-content>
+        <form [formGroup]="meuFormGroup" (ngSubmit)="submitForm()">
+          <ion-item>
+            <ion-label position="floating">Nome</ion-label>
+            <ion-input type="text" formControlName="nome"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Calorias</ion-label>
+            <ion-input type="number" formControlName="calorias"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Quantidade</ion-label>
+            <ion-input type="number" formControlName="quantidade"></ion-input>
+          </ion-item>
+
+          <ion-button expand="full" type="submit" color="primary">Adicionar novo Alimento</ion-button>
+        </form>
+      </ion-content>
+
+
+
     </ion-content>
   </ng-template>
 </ion-modal>
 
 
+
+
+<ion-modal trigger="open-modal-add-to-favs" class="borderRadius20"   >
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+
+        <ion-title>Adicione seus Alimentos mais Ingeridos </ion-title>
+
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <p>Na verdade, vamos colocar um input de pesquisa de alimentos ingeridos, porem é necessario colocar os alimentos favoritos</p>
+      <ion-content>
+
+        <ion-item>
+          <ion-icon name="search" slot="start"></ion-icon>
+          <ion-label position="floating">Pesquisar</ion-label>
+          <ion-input [(ngModel)]="pesquisa"  type="text" placeholder="Ex: Ovo, Bife, Leite ..."></ion-input>
+        </ion-item>
+        <div class="scroll margin " style="height: 350px; width: 100%" >
+<!-- FAZER VERIFICAÇÃO COM OS ALIMENTOS FAV, E IMPEDIR QUE ELES APAREÇAM AQUI SE JA ESTA NO FAVORITOS -->
+            <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of alimentosFiltrados">
+
+              <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
+              <ion-checkbox (ionChange)="checkboxChanged(x)"></ion-checkbox>
+
+            </ion-item>
+
+
+
+
+        </div>
+
+      </ion-content>
+
+
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
+
+<ion-modal trigger="open-modal-add-alimentos-ingeridos" class="borderRadius20"   >
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+
+        <ion-title>Oque você comeu Hoje? </ion-title>
+
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <p>Marque todos os Alimentos que você ingeriu</p>
+      <ion-content>
+
+        <div class="scroll margin " style="height: 350px; width: 100%" >
+
+          <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of alimentosFav">
+            <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
+            <ion-checkbox></ion-checkbox>
+          </ion-item>
+
+
+
+
+        </div>
+
+      </ion-content>
+
+
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+
+<ion-toast
+  [isOpen]="isToastOpen"
+  [message]="toastMsg"
+  [duration]="2500"
+  (didDismiss)="setOpen(false, '')"
+></ion-toast>

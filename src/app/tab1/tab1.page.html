@@ -8,13 +8,21 @@
 
 <ion-content [fullscreen]="true"  class="animate__animated  animate__zoomIn"  >
   <app-home></app-home>
-
-  <ion-fab  slot="fixed" vertical="bottom" horizontal="end" class="floatingButton">
-    <ion-fab-button id="open-modal" >
+  <ion-fab  slot="fixed" vertical="bottom" horizontal="end" class="floatingButton" style="margin-right: 200px !important;">
+    <ion-fab-button id="open-modal">
       <ion-icon name="add" ></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
+  <ion-fab  slot="fixed" vertical="bottom" horizontal="end" class="floatingButton" style="margin-right: 100px !important;">
+    <ion-fab-button id="open-modal-add-to-favs">
+      <ion-icon name="bookmark-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-fab  slot="fixed" vertical="bottom" horizontal="end" class="floatingButton" >
+    <ion-fab-button id="open-modal-alimentos-ingeridos">
+      <ion-icon name="restaurant-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>
 

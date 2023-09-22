@@ -9,6 +9,9 @@ import {Router} from "@angular/router";
 export class Tab1Page {
   public toolbar: any;
   constructor( ) {
+
+
+
     this.verificarTamanhoTela();
 
     window.addEventListener('resize', () => {
@@ -25,5 +28,6 @@ export class Tab1Page {
       this.toolbar = true;
     }
   }
+
 
 }
