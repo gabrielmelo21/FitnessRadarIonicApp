@@ -1,0 +1,39 @@
+<ion-card [class]="cardClass" style="margin-top: 10px">
+  <ion-card-header>
+    <ion-card-title class="primary"><ion-icon name="bar-chart-outline"></ion-icon> Decit Calórico Dashboard</ion-card-title>
+    <ion-card-subtitle>Aqui fica seu histórico de deficit calórico e seu progresso diário</ion-card-subtitle>
+  </ion-card-header>
+<ion-card-content>
+  <!-- graficos -->
+
+
+  <ion-grid>
+    <ion-row>
+      <ion-col  [size]="gridSize">
+        <ion-card class="borderRadius20" style="height: 290px">
+          <ion-card-header>
+            <ion-card-title>Histórico de Deficit Calorico</ion-card-title>
+            <ion-card-subtitle>Acomapanhe seu desempenho diáriamente</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-list style="height: 300px" class="scroll">
+              <ion-item>
+                <ion-label class="rgba padding borderRadius20 padding20">-120 Kcal<br><span class="primary bold">21/01</span></ion-label>
+              </ion-item>
+            </ion-list>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+      <ion-col>
+        <ion-card class="borderRadius20"  size-md="6" size-sm="12" style="height: 290px">
+          <ion-card-content>
+            <img src="https://www.pngall.com/wp-content/uploads/10/Line-Chart-Transparent.png" width="80%" height="80%" >
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-card-content>
+</ion-card>

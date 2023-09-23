@@ -2,8 +2,8 @@ import { Component  } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ModalController} from "@ionic/angular";
 import {MainApiService} from "../services/main-api.service";
-import {map, Observable} from "rxjs";
-import {checkbox} from "ionicons/icons";
+import {Observable} from "rxjs";
+
 interface Item {
   nome: string,
   calorias: number,
@@ -18,57 +18,92 @@ interface Item {
 export class HomeComponent   {
 
   public alimentosIngeridos$: Observable<any> | undefined;
-  public alimentosFav: any [] = [];
+  public alimentosFav$: Observable<any> | undefined;
   public listaAlimentos:any [] = [];
   public cardClass: any;
   public gridSize: any;
   public isToastOpen = false;
   public toastMsg: string = '';
   public meuFormGroup: FormGroup;
+  public formGroupAddAlimentosIngeridos: FormGroup;
   public pesquisa: string = '';
 
+  public alimentoSelected: any;
+  public caloriasSelected: any;
+  public quantidadeSelected:number = 1;
+  public finalKcal:any;
   constructor(private formBuilder: FormBuilder, private modalController: ModalController, private mainApi: MainApiService) {
+    this.verificarTamanhoTela();window.addEventListener('resize', () => {this.verificarTamanhoTela();});
 
     this.meuFormGroup = this.formBuilder.group({
-      nome: ['', Validators.required], // Obrigatório
+      alimento: ['', Validators.required], // Obrigatório
       calorias: [0, Validators.required], // Obrigatório
-      quantidade: [0, Validators.required], // Obrigatório
+    });
+
+    this.formGroupAddAlimentosIngeridos =  this.formBuilder.group({
+      alimento: ['', Validators.required], // Obrigatório
+      calorias: [0, Validators.required], // Obrigatório
+      quantidade:[0]
     });
 
 
-    this.verificarTamanhoTela();
-
-    window.addEventListener('resize', () => {
-      this.verificarTamanhoTela();
-    });
     this.listAlimentosIngeridos();
+    this.listFav();
+    this.mainToFav();
 
 
 
-    this.mainApi.listAlimentos().subscribe(
-     response => {
-
-         this.listaAlimentos = response;
-      }
-    )
-    this.mainApi.listAlimentosFav().subscribe(
-      response => {
-         this.alimentosFav = response;
-      }
-    )
 
   } //end constructor
+  public changeSelected(item: { alimento: string, calorias: number }[]) {
+
+      const item2 = JSON.parse(JSON.stringify(item));
+      this.alimentoSelected = item2.alimento;
+      this.caloriasSelected = item2.calorias;
+      this.quantidadeChange();
+  }
+  public quantidadeChange(){
+    if (this.quantidadeSelected>1){
+      this.finalKcal = this.caloriasSelected * this.quantidadeSelected;
+    }
+    if (this.quantidadeSelected==1){
+      this.finalKcal = this.caloriasSelected;
+    }
+  }
+
+  public mainToFav(){
+
+    this.mainApi.listAlimentos().subscribe(
+      (response: any[]) => { // Defina o tipo de response como um array de qualquer tipo
+        if (this.alimentosFav$!==undefined){
+
+          this.alimentosFav$.subscribe((favoritos: any[]) => { // Defina o tipo de favoritos como um array de qualquer tipo
+            const alimentosFavoritos = favoritos;
+
+            // Filtrar alimentos que não estão na lista de favoritos
+            this.listaAlimentos = response.filter((alimento: any) => { // Defina o tipo de alimento como um objeto de qualquer tipo
+              return !alimentosFavoritos.some((favAlimento: any) => favAlimento.alimento === alimento.alimento);
+            });
+          });
+
+        }
+      }
+    );
+
+
+  }
+  public listFav(){
+    this.alimentosFav$ =  this.mainApi.listAlimentosFav();
+  }
+
   get alimentosFiltrados()  {
-    return this.listaAlimentos.filter(alimento => {
-      return (
-        alimento.alimento.includes(this.pesquisa) && !this.alimentosFav.some(favAlimento => favAlimento.alimento === alimento.alimento)
-      );
-    });
+    return this.listaAlimentos.filter(listaAlimentos => listaAlimentos.alimento.includes(this.pesquisa) );
   }
 
   public listAlimentosIngeridos(){
    this.alimentosIngeridos$ = this.mainApi.listAlimentosIngeridos();
   }
+
   public deleteAlimentoIngerido(id: number) {
     this.mainApi.deleteAlimentosIngeridos(id).subscribe(
       response => {
@@ -85,10 +120,6 @@ export class HomeComponent   {
   }
 
 
-
-
-
-
   setOpen(isOpen: boolean, toastMsg: string) {
     this.isToastOpen = isOpen;
     this.toastMsg = toastMsg;
@@ -98,21 +129,50 @@ export class HomeComponent   {
 
   async submitForm() {
     if (this.meuFormGroup.valid) {
-      // O formulário é válido, você pode lidar com os dados aqui
       const dadosDoFormulario = this.meuFormGroup.value;
-      console.log(dadosDoFormulario);
 
-   //   this.alimentosIngeridos.push(dadosDoFormulario);
+
+   //
+      this.mainApi.inserirAlimentos(dadosDoFormulario).subscribe(
+        response => {
+
+        },
+        error1 => {
+
+        }
+      )
 
       this.setOpen(true, "Dados inseridos com Sucesso.");
 
-
-      // Feche o modal
       await this.modalController.dismiss();
-      // Limpe o formulário ou faça outra ação após a submissão
       this.meuFormGroup.reset();
     } else {
       // O formulário não é válido, trate isso de acordo (exibindo erros, etc.)
+      console.log('Formulário inválido. Verifique os campos.');
+    }
+  }
+  async submitFormAddAlimentosIngeridos(){
+    if (this.formGroupAddAlimentosIngeridos.valid) {
+      const dadosDoFormulario = this.formGroupAddAlimentosIngeridos.value;
+
+      this.mainApi.addAlimentosIngeridos(dadosDoFormulario).subscribe(
+        response => {
+
+        },
+        error1 => {
+
+        }
+      )
+
+      this.setOpen(true, "Dados inseridos com Sucesso.");
+
+      await this.modalController.dismiss();
+      this.formGroupAddAlimentosIngeridos.reset();
+
+      this.listAlimentosIngeridos();
+
+    } else {
+
       console.log('Formulário inválido. Verifique os campos.');
     }
   }
@@ -128,6 +188,7 @@ export class HomeComponent   {
     }
   }
   public alimentosSelecionados: Array<{ alimento: string, calorias: number }> = [];
+  selectedRadio: any;
 
   public inserirAlimentosFav(){
     this.mainApi.inserirEmLoteFav(this.alimentosSelecionados).subscribe(
@@ -148,12 +209,21 @@ export class HomeComponent   {
     if (index === -1) {
       // Adicionar à matriz de alimentosSelecionados se não estiver presente
       this.alimentosSelecionados.push({ alimento: item.alimento, calorias: item.calorias });
-       this.inserirAlimentosFav();
+
     } else {
       // Remover da matriz de alimentosSelecionados se já estiver presente
       this.alimentosSelecionados.splice(index, 1);
     }
   }
+
+
+  salvarFavoritos( ) {
+    this.inserirAlimentosFav();
+    this.mainToFav(); //retira os fav selecionados do modal de selecionar favs
+    this.listFav();
+  }
+
+
 
 
 }

@@ -29,13 +29,14 @@
 
 
             <ion-card-content>
-              <ion-list style="height: 300px" class="scroll">
-                <ion-list-header>
-                  <ion-label>Histórico de Alimentos Ingeridos</ion-label>
-                </ion-list-header>
+              <ion-list style="height: 600px" class="scroll">
+
+
+                <p class="textCenter padding">Histórico de Alimentos Ingeridos</p>
+
 
                   <div *ngFor="let x of alimentosIngeridos$ | async">
-                    <ion-item class="animate__animated  animate__fadeInRight">
+                    <ion-item class="animate__animated animate__bounceInLeft">
                       <ion-label class="rgba padding borderRadius20 padding20">{{x.alimento}} x{{x.quantidade}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
                       <ion-icon (click)="deleteAlimentoIngerido(x.id)" class="trash" slot="end" name="trash-bin"></ion-icon>
                     </ion-item>
@@ -53,38 +54,9 @@
         </ion-col>
       </ion-row>
     </ion-grid>
-    <div class="mat-divider"></div>
 
 
-    <!-- graficos -->
 
-
-    <ion-grid>
-      <ion-row>
-        <ion-col [size]="gridSize">
-          <ion-card class="borderRadius20" style="height: 290px">
-            <ion-card-header>
-              <ion-card-title>Histórico de Deficit Calorico</ion-card-title>
-              <ion-card-subtitle>Acomapanhe seu desempenho diáriamente</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-              <ion-list style="height: 300px" class="scroll">
-                <ion-item>
-                  <ion-label class="rgba padding borderRadius20 padding20">-120 Kcal<br><span class="primary bold">21/01</span></ion-label>
-                </ion-item>
-              </ion-list>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-        <ion-col>
-          <ion-card class="borderRadius20"  size-md="6" size-sm="12" style="height: 290px">
-            <ion-card-content>
-                     <img src="https://www.pngall.com/wp-content/uploads/10/Line-Chart-Transparent.png" width="80%" height="80%" >
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
 
 
   </ion-card-content>
@@ -107,7 +79,7 @@
         <form [formGroup]="meuFormGroup" (ngSubmit)="submitForm()">
           <ion-item>
             <ion-label position="floating">Nome</ion-label>
-            <ion-input type="text" formControlName="nome"></ion-input>
+            <ion-input type="text" formControlName="alimento"></ion-input>
           </ion-item>
 
           <ion-item>
@@ -115,10 +87,7 @@
             <ion-input type="number" formControlName="calorias"></ion-input>
           </ion-item>
 
-          <ion-item>
-            <ion-label position="floating">Quantidade</ion-label>
-            <ion-input type="number" formControlName="quantidade"></ion-input>
-          </ion-item>
+
 
           <ion-button expand="full" type="submit" color="primary">Adicionar novo Alimento</ion-button>
         </form>
@@ -139,7 +108,9 @@
       <ion-toolbar>
 
         <ion-title>Adicione seus Alimentos mais Ingeridos </ion-title>
-
+        <ion-buttons slot="end">
+          <ion-button (click)="salvarFavoritos()" [strong]="true">Salvar</ion-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
@@ -175,7 +146,7 @@
 
 
 
-<ion-modal trigger="open-modal-add-alimentos-ingeridos" class="borderRadius20"   >
+<ion-modal trigger="open-modal-alimentos-ingeridos" class="borderRadius20"   >
   <ng-template>
     <ion-header>
       <ion-toolbar>
@@ -184,23 +155,56 @@
 
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content class="ion-padding scroll">
       <p>Marque todos os Alimentos que você ingeriu</p>
-      <ion-content>
-
-        <div class="scroll margin " style="height: 350px; width: 100%" >
-
-          <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of alimentosFav">
-            <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
-            <ion-checkbox></ion-checkbox>
-          </ion-item>
 
 
+          <!-- Verifica se algum alimento foi selecionado     {{ finalKcal }} Kcal    {{ alimentoSelected }} -->
+          <div *ngIf="selectedRadio">
+
+            <div class="animate__animated animate__fadeIn rgba">
+              <form [formGroup]="formGroupAddAlimentosIngeridos" (ngSubmit)="submitFormAddAlimentosIngeridos()">
+                <ion-item>
+                  <ion-input type="text" formControlName="alimento" [(ngModel)]="alimentoSelected"></ion-input>
 
 
-        </div>
+                </ion-item>
 
-      </ion-content>
+                <ion-item>
+                  <ion-input type="text" formControlName="calorias" [(ngModel)]="finalKcal"></ion-input>
+
+
+                </ion-item>
+
+                <ion-item>
+                  <ion-label position="floating">Quantidade</ion-label>
+                  <ion-input (ionChange)="quantidadeChange()" formControlName="quantidade" [(ngModel)]="quantidadeSelected"
+                             type="number" placeholder="Ex: 2"></ion-input>
+                </ion-item>
+
+
+                <ion-button type="submit" color="primary" shape="round" size="small" class="margin"  >
+                  Adicionar
+                </ion-button>
+              </form>
+            </div>
+
+            <br>
+          </div>
+
+
+          <!-- radio button -->
+
+          <ion-list class="scroll" style="height: 400px">
+            <ion-radio-group [(ngModel)]="selectedRadio">
+              <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of alimentosFav$ | async">
+                <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
+                <ion-radio  (click)="changeSelected(x)"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-list>
+
+
 
 
 

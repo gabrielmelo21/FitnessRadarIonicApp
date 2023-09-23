@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +11,16 @@ export class MainApiService {
    public listAlimentos(){
      return this.http.get<any>(this.API + "alimentos");
    }
+  public addAlimentosIngeridos(data: any) {
+      return this.http.post<any>(this.API + "addAlimentosIngeridos", data);
+
+  }
+
    public inserirEmLote(data: any){
     return this.http.post<any>(this.API + "addAlimentosBatch", data);
+   }
+   public inserirAlimentos(data: any){
+     return this.http.post<any>(this.API + "addAlimentos", data);
    }
    public listAlimentosIngeridos(){
 
@@ -27,4 +35,5 @@ export class MainApiService {
  public inserirEmLoteFav(data: any){
     return this.http.post<any>(this.API + "addAlimentosFavBatch", data);
  }
+
 }

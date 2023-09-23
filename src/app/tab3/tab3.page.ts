@@ -6,11 +6,26 @@ import { Component } from '@angular/core';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page {
+  public toolbar: any;
+  constructor( ) {
 
 
 
-  constructor() {
+    this.verificarTamanhoTela();
 
+    window.addEventListener('resize', () => {
+      this.verificarTamanhoTela();
+    });
+  }
+
+  verificarTamanhoTela() {
+    const width = window.innerWidth;
+    if (width >= 768) {
+      this.toolbar = false;
+    } else {
+
+      this.toolbar = true;
+    }
   }
 
 }

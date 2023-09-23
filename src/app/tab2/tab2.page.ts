@@ -7,19 +7,26 @@ import {Router} from "@angular/router";
   styleUrls: ['tab2.page.scss']
 })
 export class Tab2Page {
-  /**
+  public toolbar: any;
+  constructor( ) {
 
-  animationFadeIn: string = "animate__animated animate__fadeInLeft";
-  animationFadeOut: string  = "animate__animated animate__fadeOutLeft";
 
-  constructor(private router: Router) {}
 
-  public changePage(path: string){
-    this.animationStatus = false; //executa animação de out
-    setTimeout(() => {
-      this.animationStatus = true; //set para true novamente
-      this.router.navigate([path]);
-    }, 300)
+    this.verificarTamanhoTela();
+
+    window.addEventListener('resize', () => {
+      this.verificarTamanhoTela();
+    });
   }
-**/
+
+  verificarTamanhoTela() {
+    const width = window.innerWidth;
+    if (width >= 768) {
+      this.toolbar = false;
+    } else {
+
+      this.toolbar = true;
+    }
+  }
+
 }
