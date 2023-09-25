@@ -8,48 +8,59 @@
     <ion-grid >
       <ion-row>
         <ion-col [size]="gridSize">
-          <ion-card class="borderRadius20" style="height: 320px">
+          <ion-card class="borderRadius20" style="height: 380px">
             <ion-card-header>
-              <ion-card-title>Calorias Diárias</ion-card-title>
+              <ion-card-title>Calorias Diárias - <ion-button  fill="none" size="small" shape="round" (click)="resetCalorias()" >Resetar</ion-button></ion-card-title>
               <ion-card-subtitle>Você deve consumir Abaixo do Limite diário</ion-card-subtitle>
               <ion-button fill="outline" size="small" shape="round">Descubra seu T.M.B</ion-button>
             </ion-card-header>
+
             <ion-card-content>
-              <div class="rgba borderRadius20 margin" style="height: 100px">
-                <h1 class="center padding" style="font-size: 30px;padding: 10px; color: white;">0 / 1811</h1>
-                <ion-progress-bar [value]="50" class="margin borderRadius20" style="width: 90%;padding: 5px;margin-top: 10px"></ion-progress-bar>
-                <br>
-              </div>
+
+                   <h1 class="center padding" style="font-size: 30px;padding: 10px; color: white;">{{calorias_atual  }} / {{tmb}}</h1>
+                 <p class="textCenter" style="color:#FFF;">{{progressBarPercentage}}%</p>
+                <ion-progress-bar [value]="(calorias_atual / tmb)" class="margin borderRadius20" style="width: 90%;padding: 5px;margin-top: 10px"></ion-progress-bar>
+                <h3 class="margin padding textCenter">Data Referente: <span class="primary bold"> {{data_dia}}  </span> </h3>
+                <h3 class="margin padding textCenter">Deficit Calorico: <span class="primary bold">-{{deficit_calorico}} Kcal</span> </h3>
+
+
+          <!--      <div class="rgba borderRadius20 margin" style="height: 210px" *ngFor="let z of calorias$ | async">
+
+
+                <h1 class="center padding" style="font-size: 30px;padding: 10px; color: white;">{{z.calorias_atual  }} / {{z.tmb}}</h1>
+                 <p class="textCenter" style="color:#FFF;">{{progressBarPercentage}}%</p>
+                <ion-progress-bar [value]="(z.calorias_atual / z.tmb)" class="margin borderRadius20" style="width: 90%;padding: 5px;margin-top: 10px"></ion-progress-bar>
+                <h3 class="margin padding textCenter">Data Referente: <span class="primary bold"> {{z.data_dia}}  </span> </h3>
+                <h3 class="margin padding textCenter">Deficit Calorico: <span class="primary bold">-{{z.deficit_calorico}} Kcal</span> </h3>
+              </div>   -->
             </ion-card-content>
           </ion-card>
         </ion-col>
         <ion-col>
+
           <ion-card class="borderRadius20"  size-md="6" size-sm="12">
-
-
 
             <ion-card-content>
               <ion-list style="height: 600px" class="scroll">
 
+                <p class="textCenter padding" *ngIf="this.listAlimentosIngeridosEmpty">Histórico de Alimentos Ingeridos</p>
 
-                <p class="textCenter padding">Histórico de Alimentos Ingeridos</p>
-
-
+                   <!-- animate__animated animate__fadeInDownBig -->
                   <div *ngFor="let x of alimentosIngeridos$ | async">
-                    <ion-item class="animate__animated animate__bounceInLeft">
-                      <ion-label class="rgba padding borderRadius20 padding20">{{x.alimento}} x{{x.quantidade}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
+                    <ion-item class=" ">
+                      <ion-label class="rgba padding borderRadius20 padding20">{{ x.alimento }} x{{ x.quantidade }}<br><span class="primary bold">{{ x.calorias }} Kcal</span></ion-label>
                       <ion-icon (click)="deleteAlimentoIngerido(x.id)" class="trash" slot="end" name="trash-bin"></ion-icon>
                     </ion-item>
                   </div>
-                <!--<div *ngIf=" alimentosIngeridos$.length>0;else empty">
-                </div>
-                <ng-template #empty>
-                  <h3>GIF DE PRTO V4SIO</h3>
-                </ng-template>
--->
 
+                  <div *ngIf="this.listAlimentosIngeridosEmpty" class="textCenter" style="margin: auto; margin-top: 40px">
+                     <img src="assets/plate.png" width="20%" height="20%" class="animate_animated animate__jackInTheBox">
+                     <h1 class="primary bold">Seu prato está vázio...</h1>
+                  </div>
               </ion-list>
+
             </ion-card-content>
+
           </ion-card>
         </ion-col>
       </ion-row>
@@ -159,8 +170,10 @@
       <p>Marque todos os Alimentos que você ingeriu</p>
 
 
-          <!-- Verifica se algum alimento foi selecionado     {{ finalKcal }} Kcal    {{ alimentoSelected }} -->
-          <div *ngIf="selectedRadio">
+          <!-- Verifica se algum alimento foi selecionado     {{ finalKcal }} Kcal    {{ alimentoSelected }}
+           changeBlockAddAlimento
+          -->
+          <div *ngIf="changeBlockAddAlimento">
 
             <div class="animate__animated animate__fadeIn rgba">
               <form [formGroup]="formGroupAddAlimentosIngeridos" (ngSubmit)="submitFormAddAlimentosIngeridos()">

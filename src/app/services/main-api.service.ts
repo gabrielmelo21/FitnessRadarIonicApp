@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class MainApiService {
 
   }
 
-   public inserirEmLote(data: any){
+   public inserirAlimentosEmLote(data: any){
     return this.http.post<any>(this.API + "addAlimentosBatch", data);
    }
    public inserirAlimentos(data: any){
@@ -36,4 +37,15 @@ export class MainApiService {
     return this.http.post<any>(this.API + "addAlimentosFavBatch", data);
  }
 
+
+
+
+
+
+ public getCaloriasData(){
+    return this.http.get<any>(this.API + "calorias");
+ }
+ public updateCaloriasData(data: any){
+    return this.http.put<any>(this.API + `updateCalorias/202`, data);
+ }
 }
