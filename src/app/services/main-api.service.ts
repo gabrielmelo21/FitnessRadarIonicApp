@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient, HttpHeaders, HttpParams} from "@angular/common/http";
 import {Observable} from "rxjs";
 
 @Injectable({
@@ -17,9 +17,7 @@ export class MainApiService {
 
   }
 
-   public inserirAlimentosEmLote(data: any){
-    return this.http.post<any>(this.API + "addAlimentosBatch", data);
-   }
+
    public inserirAlimentos(data: any){
      return this.http.post<any>(this.API + "addAlimentos", data);
    }
@@ -30,16 +28,6 @@ export class MainApiService {
   public deleteAlimentosIngeridos(id: number){
      return this.http.delete<any>(this.API + "deletarAlimentosIngeridos/"+ id);
   }
-  public listAlimentosFav(){
-    return this.http.get<any>(this.API + "alimentosFav");
-  }
- public inserirEmLoteFav(data: any){
-    return this.http.post<any>(this.API + "addAlimentosFavBatch", data);
- }
-
-
-
-
 
 
  public getCaloriasData(){
@@ -48,4 +36,34 @@ export class MainApiService {
  public updateCaloriasData(data: any){
     return this.http.put<any>(this.API + `updateCalorias/202`, data);
  }
+
+ // IONIC É ESTRRANHOOOOOOOOOOOOOOOOOOO
+  deleteAlimentosById(ids: number[]) {
+    // Criar um objeto com a estrutura esperada pela API
+    const requestData = {
+      ids: ids
+    };
+
+    return this.http.post<any>(this.API + 'ListaAlimentosDelete', requestData);
+  }
+
+  /**
+   * Copdigo inuteis
+   *
+   *   public listAlimentosFav(){
+   *     return this.http.get<any>(this.API + "alimentosFav");
+   *   }
+   *  public inserirEmLoteFav(data: any){
+   *     return this.http.post<any>(this.API + "addAlimentosFavBatch", data);
+   *  }
+   *
+   *     public inserirAlimentosEmLote(data: any){
+   *     return this.http.post<any>(this.API + "addAlimentosBatch", data);
+   *    }
+   *
+   *
+   */
+
+
+
 }

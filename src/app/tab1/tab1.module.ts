@@ -7,6 +7,7 @@ import { ExploreContainerComponentModule } from '../explore-container/explore-co
 
 import { Tab1PageRoutingModule } from './tab1-routing.module';
 import {HomeModule} from "../home/home.module";
+import {ChartModule} from "../chart/chart.module";
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import {HomeModule} from "../home/home.module";
         FormsModule,
         ExploreContainerComponentModule,
         Tab1PageRoutingModule,
-        HomeModule
+        HomeModule,
+        ChartModule
     ],
   declarations: [Tab1Page]
 })

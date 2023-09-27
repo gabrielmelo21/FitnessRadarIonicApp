@@ -24,15 +24,7 @@
                 <h3 class="margin padding textCenter">Deficit Calorico: <span class="primary bold">-{{deficit_calorico}} Kcal</span> </h3>
 
 
-          <!--      <div class="rgba borderRadius20 margin" style="height: 210px" *ngFor="let z of calorias$ | async">
 
-
-                <h1 class="center padding" style="font-size: 30px;padding: 10px; color: white;">{{z.calorias_atual  }} / {{z.tmb}}</h1>
-                 <p class="textCenter" style="color:#FFF;">{{progressBarPercentage}}%</p>
-                <ion-progress-bar [value]="(z.calorias_atual / z.tmb)" class="margin borderRadius20" style="width: 90%;padding: 5px;margin-top: 10px"></ion-progress-bar>
-                <h3 class="margin padding textCenter">Data Referente: <span class="primary bold"> {{z.data_dia}}  </span> </h3>
-                <h3 class="margin padding textCenter">Deficit Calorico: <span class="primary bold">-{{z.deficit_calorico}} Kcal</span> </h3>
-              </div>   -->
             </ion-card-content>
           </ion-card>
         </ion-col>
@@ -54,7 +46,7 @@
                   </div>
 
                   <div *ngIf="this.listAlimentosIngeridosEmpty" class="textCenter" style="margin: auto; margin-top: 40px">
-                     <img src="assets/plate.png" width="20%" height="20%" class="animate_animated animate__jackInTheBox">
+                     <img src="assets/plate.png" width="20%" height="20%" class="animate_animated animate__jackInTheBox floating-animation">
                      <h1 class="primary bold">Seu prato está vázio...</h1>
                   </div>
               </ion-list>
@@ -74,7 +66,7 @@
 </ion-card>
 
 
-
+<!-- Adicionar um Alimento Modal -->
 <ion-modal trigger="open-modal" class="borderRadius20"   >
   <ng-template>
     <ion-header>
@@ -82,11 +74,44 @@
 
         <ion-title>Adicione um Alimento</ion-title>
 
+
+        <ion-buttons slot="end">
+          <ion-button (click)="deleteAlimento()" [strong]="true">Deletar</ion-button>
+        </ion-buttons>
+
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-<p>Adicionar novos alimentos em nosso banco de dados</p>
-      <ion-content>
+
+      <!-- SE NAO FUNCIONA DIREITO VOU FAZER FUNCIONAR
+      <ion-segment value="default"  >
+        <ion-segment-button value="default" (click)="changeState(true);">
+          <ion-label>Adicionar</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="segment" (click)="changeState(false);">
+          <ion-label>Deletar</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+      -->
+
+      <ion-content *ngIf="!isDefault" >
+    <h3>Deletar um alimento</h3>
+
+        <ion-list class="scroll" style="height: 400px">
+
+          <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of listAlimentos$ | async">
+            <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
+            <ion-checkbox  (ionChange)="toggleSelected(x)"></ion-checkbox>
+          </ion-item>
+
+        </ion-list>
+
+
+
+      </ion-content>
+
+
+      <ion-content *ngIf="isDefault" >
         <form [formGroup]="meuFormGroup" (ngSubmit)="submitForm()">
           <ion-item>
             <ion-label position="floating">Nome</ion-label>
@@ -98,55 +123,8 @@
             <ion-input type="number" formControlName="calorias"></ion-input>
           </ion-item>
 
-
-
           <ion-button expand="full" type="submit" color="primary">Adicionar novo Alimento</ion-button>
         </form>
-      </ion-content>
-
-
-
-    </ion-content>
-  </ng-template>
-</ion-modal>
-
-
-
-
-<ion-modal trigger="open-modal-add-to-favs" class="borderRadius20"   >
-  <ng-template>
-    <ion-header>
-      <ion-toolbar>
-
-        <ion-title>Adicione seus Alimentos mais Ingeridos </ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="salvarFavoritos()" [strong]="true">Salvar</ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <p>Na verdade, vamos colocar um input de pesquisa de alimentos ingeridos, porem é necessario colocar os alimentos favoritos</p>
-      <ion-content>
-
-        <ion-item>
-          <ion-icon name="search" slot="start"></ion-icon>
-          <ion-label position="floating">Pesquisar</ion-label>
-          <ion-input [(ngModel)]="pesquisa"  type="text" placeholder="Ex: Ovo, Bife, Leite ..."></ion-input>
-        </ion-item>
-        <div class="scroll margin " style="height: 350px; width: 100%" >
-<!-- FAZER VERIFICAÇÃO COM OS ALIMENTOS FAV, E IMPEDIR QUE ELES APAREÇAM AQUI SE JA ESTA NO FAVORITOS -->
-            <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of alimentosFiltrados">
-
-              <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
-              <ion-checkbox (ionChange)="checkboxChanged(x)"></ion-checkbox>
-
-            </ion-item>
-
-
-
-
-        </div>
-
       </ion-content>
 
 
@@ -169,53 +147,49 @@
     <ion-content class="ion-padding scroll">
       <p>Marque todos os Alimentos que você ingeriu</p>
 
+      <div *ngIf="changeBlockAddAlimento">
 
-          <!-- Verifica se algum alimento foi selecionado     {{ finalKcal }} Kcal    {{ alimentoSelected }}
-           changeBlockAddAlimento
-          -->
-          <div *ngIf="changeBlockAddAlimento">
-
-            <div class="animate__animated animate__fadeIn rgba">
-              <form [formGroup]="formGroupAddAlimentosIngeridos" (ngSubmit)="submitFormAddAlimentosIngeridos()">
-                <ion-item>
-                  <ion-input type="text" formControlName="alimento" [(ngModel)]="alimentoSelected"></ion-input>
+        <div class="animate__animated animate__fadeIn rgba">
+          <form [formGroup]="formGroupAddAlimentosIngeridos" (ngSubmit)="submitFormAddAlimentosIngeridos()">
+            <ion-item>
+              <ion-input type="text" formControlName="alimento" [(ngModel)]="alimentoSelected"></ion-input>
 
 
-                </ion-item>
+            </ion-item>
 
-                <ion-item>
-                  <ion-input type="text" formControlName="calorias" [(ngModel)]="finalKcal"></ion-input>
-
-
-                </ion-item>
-
-                <ion-item>
-                  <ion-label position="floating">Quantidade</ion-label>
-                  <ion-input (ionChange)="quantidadeChange()" formControlName="quantidade" [(ngModel)]="quantidadeSelected"
-                             type="number" placeholder="Ex: 2"></ion-input>
-                </ion-item>
+            <ion-item>
+              <ion-input type="text" formControlName="calorias" [(ngModel)]="finalKcal"></ion-input>
 
 
-                <ion-button type="submit" color="primary" shape="round" size="small" class="margin"  >
-                  Adicionar
-                </ion-button>
-              </form>
-            </div>
+            </ion-item>
 
-            <br>
-          </div>
+            <ion-item>
+              <ion-label position="floating">Quantidade</ion-label>
+              <ion-input (ionChange)="quantidadeChange()" formControlName="quantidade" [(ngModel)]="quantidadeSelected"
+                         type="number" placeholder="Ex: 2"></ion-input>
+            </ion-item>
 
 
-          <!-- radio button -->
+            <ion-button type="submit" color="primary" shape="round" size="small" class="margin"  >
+              Adicionar
+            </ion-button>
+          </form>
+        </div>
 
-          <ion-list class="scroll" style="height: 400px">
-            <ion-radio-group [(ngModel)]="selectedRadio">
-              <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of alimentosFav$ | async">
-                <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
-                <ion-radio  (click)="changeSelected(x)"></ion-radio>
-              </ion-item>
-            </ion-radio-group>
-          </ion-list>
+        <br>
+      </div>
+
+
+      <!-- radio button -->
+
+      <ion-list class="scroll" style="height: 400px">
+        <ion-radio-group [(ngModel)]="selectedRadio">
+          <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of listAlimentos$ | async">
+            <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
+            <ion-radio  (click)="changeSelected(x)"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
 
 
 
@@ -232,3 +206,49 @@
   [duration]="2500"
   (didDismiss)="setOpen(false, '')"
 ></ion-toast>
+
+
+<!-- Lista de alimentos geral - para por nos alimentos favoritos -->
+<!--
+<ion-modal trigger="open-modal-add-to-favs" class="borderRadius20"   >
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+
+        <ion-title>Adicione seus Alimentos mais Ingeridos </ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="salvarFavoritos()" [strong]="true">Salvar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <p>Na verdade, vamos colocar um input de pesquisa de alimentos ingeridos, porem é necessario colocar os alimentos favoritos</p>
+      <ion-content>
+
+        <ion-item>
+          <ion-icon name="search" slot="start"></ion-icon>
+          <ion-label position="floating">Pesquisar</ion-label>
+          <ion-input [(ngModel)]="pesquisa"  type="text" placeholder="Ex: Ovo, Bife, Leite ..."></ion-input>
+        </ion-item>
+        <div class="scroll margin " style="height: 350px; width: 100%" >
+
+            <ion-item class="animate__animated animate__fadeInRight rgba" *ngFor="let x of alimentosFiltrados">
+
+              <ion-label>{{x.alimento}}<br><span class="primary bold">{{x.calorias}} Kcal</span></ion-label>
+              <ion-checkbox (ionChange)="checkboxChanged(x)"></ion-checkbox>
+
+            </ion-item>
+
+
+
+
+        </div>
+
+      </ion-content>
+
+
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+-->

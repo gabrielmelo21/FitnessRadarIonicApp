@@ -103,3 +103,15 @@ ion-alert{
   color: red;
 
 }
+.floating-animation{
+  animation: floating 2s infinite;
+}
+
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px); /* Ajuste essa altura conforme necessário */
+  }
+}
