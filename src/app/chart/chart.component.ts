@@ -1,4 +1,4 @@
-import { Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Chart} from 'chart.js';
 
 
@@ -7,38 +7,34 @@ import {Chart} from 'chart.js';
   templateUrl: './chart.component.html',
   styleUrls: ['./chart.component.scss'],
 })
-export class ChartComponent {
-  chart: any;
+export class ChartComponent implements OnInit {
+ config: any;
+  constructor() { }
 
- constructor() {
+  ngOnInit(): void {
+    // Este é o lugar onde o gráfico será criado, após o componente ser inicializado.
+    this.createLineChart();
+  }
 
-   const labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio'];
-   const data = [100, 200, 300, 400, 500];
+  createLineChart() {
+    const labels = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho'];
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: 'Vendas',
+        data: [100, 200, 300, 400, 500, 600, 700],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    };
 
-   this.chart = new Chart('myChart', {
-     type: 'line', // Alterado para 'line' para um gráfico de linha
-     data: {
-       labels: labels,
-       datasets: [{
-         label: 'Vendas',
-         data: data,
-         borderColor: 'rgba(0, 128, 255, 0.6)', // Cor da linha
-         backgroundColor: 'rgba(0, 128, 255, 0.2)' // Cor do preenchimento da área abaixo da linha
-       }]
-     },
+    this.config  = {
+      type: 'line',
+      data: data,
+    };
 
-     options: {
-       scales: {
-         y: {
-           beginAtZero: true
-         }
-       }
-     }
-   });
-
- } //comts
-
-
-
+    new Chart('myChart', this.config);
+  }
 
 }
