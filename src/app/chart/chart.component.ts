@@ -11,7 +11,6 @@ import {map} from "rxjs";
 })
 export class ChartComponent implements OnInit {
   config: any;
-  mainArray: Array<any> = [] ;
   labels: Array<any> = [] ;
   dates: Array<any> = [] ;
   constructor(private mainAPI: MainApiService) {
