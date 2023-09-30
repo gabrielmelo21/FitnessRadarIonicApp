@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Chart} from 'chart.js';
 import {MainApiService} from "../services/main-api.service";
+import {map} from "rxjs";
 
 
 @Component({
@@ -10,20 +11,43 @@ import {MainApiService} from "../services/main-api.service";
 })
 export class ChartComponent implements OnInit {
   config: any;
-  labels: any = ['27/09', '28/09', '29/09', '30/09', '01/10'];
-  dates: any = [23, 25, 14, 17, 25];
+  mainArray: Array<any> = [] ;
+  labels: Array<any> = [] ;
+  dates: Array<any> = [] ;
   constructor(private mainAPI: MainApiService) {
 
-    if (this.labels.length > 7 && this.dates.length > 7 ){
-      // retire o primeiro dado para manter a constancia do grafico
-    }
+
 
 
   }
 
+  public listHistorico() {
+    this.mainAPI.getDeficitCaloricoHistorico().pipe(
+      map((resp: any[]) => {
+        // Mapear os dados de 'deficit_calorico' para o array 'dates'
+        this.dates = resp.map(item => Math.abs(item.deficit_calorico));
+
+
+        // Mapear os dados de 'data_dia' para o array 'labels'
+        this.labels = resp.map(item => item.data_dia);
+
+        if (this.labels.length > 7) {
+          // Reduzir o tamanho do array para 7 elementos, mantendo os últimos 7 elementos
+          this.labels = this.labels.slice(-7);
+          this.dates = this.dates.slice(-7);
+        }
+        this.createLineChart();
+
+      })
+    ).subscribe();
+  }
+
+
+
   ngOnInit(): void {
-    // Este é o lugar onde o gráfico será criado, após o componente ser inicializado.
-    this.createLineChart();
+
+    this.listHistorico()
+
   }
 
   createLineChart() {
@@ -33,7 +57,7 @@ export class ChartComponent implements OnInit {
       datasets: [{
         label: 'Deficit Calórico',
         data: this.dates,
-        fill: false,
+        fill: true,
         borderColor: 'rgb(75, 192, 192)',
         tension: 0.1
       }]

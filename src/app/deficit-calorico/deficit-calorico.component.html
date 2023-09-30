@@ -10,16 +10,29 @@
   <ion-grid>
     <ion-row>
       <ion-col  [size]="gridSize">
-        <ion-card class="borderRadius20" style="height: 290px">
+        <ion-card class="borderRadius20" style="height: 590px">
           <ion-card-header>
             <ion-card-title>Histórico de Deficit Calorico</ion-card-title>
             <ion-card-subtitle>Acomapanhe seu desempenho diáriamente</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
-            <ion-list style="height: 300px" class="scroll">
-              <ion-item>
-                <ion-label class="rgba padding borderRadius20 padding20">-120 Kcal<br><span class="primary bold">21/01</span></ion-label>
+
+            <ion-list style="height: 500px" class="scroll" >
+              <div *ngFor="let x of history | async">
+              <ion-item *ngIf="x.deficit_calorico<0">
+                <ion-label class="rgba padding borderRadius20 padding20">
+                  <span class="green bold">{{x.deficit_calorico}} Kcal</span><br><span class="primary bold">{{x.data_dia}}</span></ion-label>
+                <ion-icon class="green" slot="end" name="checkmark-circle-outline"></ion-icon>
               </ion-item>
+
+                <ion-item *ngIf="x.deficit_calorico>0">
+                  <ion-label class="rgba padding borderRadius20 padding20">
+                    <span class="red bold">+{{x.deficit_calorico}} Kcal</span><br><span class="primary bold">{{x.data_dia}}</span></ion-label>
+                  <ion-icon class="red" slot="end" name="close-circle-outline"></ion-icon>
+                </ion-item>
+
+
+              </div>
             </ion-list>
           </ion-card-content>
         </ion-card>

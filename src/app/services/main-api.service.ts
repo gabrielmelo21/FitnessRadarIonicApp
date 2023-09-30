@@ -47,6 +47,13 @@ export class MainApiService {
     return this.http.post<any>(this.API + 'ListaAlimentosDelete', requestData);
   }
 
+
+  getDeficitCaloricoHistorico(){
+    return this.http.get<any>(this.API + "historico");
+  }
+
+
+
   /**
    * Copdigo inuteis
    *

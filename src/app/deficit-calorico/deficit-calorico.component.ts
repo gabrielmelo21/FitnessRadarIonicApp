@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {map, Observable} from "rxjs";
+import {MainApiService} from "../services/main-api.service";
 
 @Component({
   selector: 'app-deficit-calorico',
@@ -8,8 +10,10 @@ import { Component, OnInit } from '@angular/core';
 export class DeficitCaloricoComponent   {
   public cardClass: any;
   public gridSize: any;
-  constructor() {
+  public history: Observable<any> | undefined;
+  constructor(private mainApi: MainApiService) {
     this.verificarTamanhoTela();window.addEventListener('resize', () => {this.verificarTamanhoTela();});
+    this.listHistorico();
   }
 
   verificarTamanhoTela() {
@@ -22,5 +26,15 @@ export class DeficitCaloricoComponent   {
       this.gridSize = ""
     }
   }
+
+  public listHistorico(){
+    this.history = this.mainApi.getDeficitCaloricoHistorico().pipe(
+      map(resp => {if (resp) {return resp.reverse();}return resp;
+      })
+
+    );
+  }
+
+
 
 }
