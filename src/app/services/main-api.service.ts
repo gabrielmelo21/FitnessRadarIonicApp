@@ -6,7 +6,7 @@ import {Observable} from "rxjs";
   providedIn: 'root'
 })
 export class MainApiService {
-  private readonly API = 'http://localhost:8081/api/';
+  private readonly API = 'http://localhost:8088/api/';
   constructor(private http: HttpClient) { }
 
    public listAlimentos(){
@@ -50,6 +50,11 @@ export class MainApiService {
 
   getDeficitCaloricoHistorico(){
     return this.http.get<any>(this.API + "historico");
+  }
+
+
+  getPeso(){
+    return this.http.get<any>(this.API + "peso");
   }
 
 

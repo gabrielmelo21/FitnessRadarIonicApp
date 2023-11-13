@@ -7,18 +7,20 @@ import { ExploreContainerComponentModule } from '../explore-container/explore-co
 
 import { Tab2PageRoutingModule } from './tab2-routing.module';
 import { HomeModule } from '../home/home.module';
+import {PesoModule} from "../peso/peso.module";
 
 
 
 @NgModule({
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    ExploreContainerComponentModule,
-    Tab2PageRoutingModule,
-     HomeModule
-  ],
+    imports: [
+        IonicModule,
+        CommonModule,
+        FormsModule,
+        ExploreContainerComponentModule,
+        Tab2PageRoutingModule,
+        HomeModule,
+        PesoModule
+    ],
   declarations: [Tab2Page]
 })
 export class Tab2PageModule {}

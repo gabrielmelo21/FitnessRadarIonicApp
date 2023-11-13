@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Chart} from 'chart.js';
 import {MainApiService} from "../services/main-api.service";
-import {map} from "rxjs";
+import {filter, map} from "rxjs";
 
 
 @Component({
@@ -13,12 +13,13 @@ export class ChartComponent implements OnInit {
   config: any;
   labels: Array<any> = [] ;
   dates: Array<any> = [] ;
-  constructor(private mainAPI: MainApiService) {
+  filterStatus: boolean = false;
+  chart: any;
+  constructor(private mainAPI: MainApiService) {}
+  ngOnInit(): void {this.listHistorico()}
 
 
 
-
-  }
 
   public listHistorico() {
     this.mainAPI.getDeficitCaloricoHistorico().pipe(
@@ -30,12 +31,15 @@ export class ChartComponent implements OnInit {
         // Mapear os dados de 'data_dia' para o array 'labels'
         this.labels = resp.map(item => item.data_dia);
 
-        if (this.labels.length > 7) {
+
+
+        if (this.labels.length > 7 && !this.filterStatus) {
           // Reduzir o tamanho do array para 7 elementos, mantendo os últimos 7 elementos
           this.labels = this.labels.slice(-7);
           this.dates = this.dates.slice(-7);
         }
-        this.createLineChart();
+
+        this.filterStatus ? this.createLineChart() : this.createLineChart2();
 
       })
     ).subscribe();
@@ -43,18 +47,14 @@ export class ChartComponent implements OnInit {
 
 
 
-  ngOnInit(): void {
 
-    this.listHistorico()
-
-  }
 
   createLineChart() {
     const labels = this.labels;
     const data = {
       labels: labels,
       datasets: [{
-        label: 'Deficit Calórico',
+        label: 'Todo Período',
         data: this.dates,
         fill: true,
         borderColor: 'rgb(75, 192, 192)',
@@ -69,5 +69,35 @@ export class ChartComponent implements OnInit {
 
     new Chart('myChart', this.config);
   }
+
+
+  createLineChart2() {
+    const labels = this.labels;
+    const data = {
+      labels: labels,
+      datasets: [{
+        label: '7 Dias',
+        data: this.dates,
+        fill: true,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }]
+    };
+
+    this.config  = {
+      type: 'line',
+      data: data,
+    };
+
+    new Chart('myChart7', this.config);
+  }
+
+
+  public filterData(state: boolean){
+     this.filterStatus = state;
+     this.listHistorico()
+}
+
+
 
 }
